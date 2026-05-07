@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --color-primary-50: #e6f7ee;
+  --color-primary-100: #c2ebd5;
+  --color-primary-200: #8fd9b0;
+  --color-primary-300: #5cc78b;
+  --color-primary-400: #36b86f;
+  --color-primary-500: #1a9d55;
+  --color-primary-600: #148a49;
+  --color-primary-700: #0e6e3a;
+  --color-primary-800: #09532c;
+  --color-primary-900: #04371d;
+  --color-accent-50: #fef7e6;
+  --color-accent-100: #fdecc0;
+  --color-accent-200: #fbd88a;
+  --color-accent-300: #f9c454;
+  --color-accent-400: #f7b52e;
+  --color-accent-500: #f5a623;
+  --color-accent-600: #e0911a;
+  --color-accent-700: #c07712;
+  --color-accent-800: #9a5e0d;
+  --color-accent-900: #744607;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8faf9;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a9d55;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #148a49;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 157, 85, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(26, 157, 85, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
