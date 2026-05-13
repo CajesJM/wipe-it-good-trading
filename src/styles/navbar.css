@@ -1,0 +1,494 @@
+:root {
+  --primary-50: #eef2ff;
+  --primary-100: #dbe0ff;
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --primary-900: #1e1b4b;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --accent-600: #ea580c;
+  --red-50: #fef2f2;
+  --red-600: #dc2626;
+  --white: #ffffff;
+  --black: #000000;
+}
+
+/* ===== Base Navbar ===== */
+.navbar {
+  background-color: var(--white);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  animation: slideDown 0.3s ease-out;
+}
+
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .navbar-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+/* ===== Logo ===== */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  background: linear-gradient(
+    to bottom right,
+    var(--primary-500),
+    var(--primary-700)
+  );
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.logo-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--white);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-main {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--gray-900);
+}
+
+.logo-sub {
+  font-size: 0.625rem;
+  color: var(--primary-600);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ===== Desktop Navigation Links ===== */
+.nav-links {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--gray-600);
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--primary-600);
+}
+
+.nav-link.active {
+  color: var(--primary-600);
+}
+
+/* ===== Right Actions (Cart, User, Mobile Toggle) ===== */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Cart Icon */
+.cart-btn {
+  position: relative;
+  padding: 0.5rem;
+  color: var(--gray-600);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cart-btn:hover {
+  color: var(--primary-600);
+}
+
+.cart-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -0.125rem;
+  right: -0.125rem;
+  background-color: var(--primary-500);
+  color: var(--white);
+  font-size: 0.625rem;
+  font-weight: 700;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* User Profile Section */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-50);
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.user-menu-btn:hover {
+  background-color: var(--primary-100);
+}
+
+.avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--primary-500);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-text {
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary-700);
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .user-name {
+    display: block;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 14rem;
+  background-color: var(--white);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--gray-100);
+  padding: 0.5rem 0;
+  z-index: 50;
+  animation: scaleIn 0.2s ease-out;
+}
+
+.profile-info {
+  padding: 0 1rem 0.5rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.profile-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.profile-email {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.dropdown-link:hover {
+  background-color: var(--gray-50);
+}
+
+.dropdown-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--red-600);
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-logout:hover {
+  background-color: var(--red-50);
+}
+
+/* Login Button */
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: var(--primary-500);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: var(--primary-600);
+}
+
+.login-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Mobile Menu Toggle */
+.mobile-toggle {
+  padding: 0.5rem;
+  color: var(--gray-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: block;
+}
+
+.mobile-toggle:hover {
+  color: var(--primary-600);
+}
+
+.mobile-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .mobile-toggle {
+    display: none;
+  }
+}
+
+/* Mobile Navigation Panel */
+.mobile-nav {
+  display: block;
+  border-top: 1px solid var(--gray-100);
+  padding: 0.75rem 0;
+  animation: slideDown 0.3s ease-out;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.mobile-nav-link:hover {
+  background-color: var(--primary-50);
+}
+
+.admin-navbar {
+  background-color: var(--gray-900);
+  color: var(--white);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--white);
+}
+
+.admin-logo-icon {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--primary-500);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-logo-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--white);
+}
+
+.admin-logo-text {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.admin-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-link {
+  font-size: 0.875rem;
+  color: var(--gray-300);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.admin-link:hover {
+  color: var(--white);
+}
+
+.admin-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-300);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.admin-logout:hover {
+  color: var(--white);
+}
+
+.admin-logout svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ===== Overlay for Profile Dropdown ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+/* ===== Keyframes ===== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

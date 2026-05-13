@@ -1,0 +1,336 @@
+:root {
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+  --primary-300: #a5b4fc;
+  --primary-400: #818cf8;
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --red-50: #fef2f2;
+  --red-600: #dc2626;
+  --white: #ffffff;
+}
+
+/* Page Wrapper */
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(
+    to bottom right,
+    var(--primary-50),
+    var(--white),
+    var(--primary-50)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 28rem; /* max-w-md */
+}
+
+.register-card {
+  background-color: var(--white);
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--gray-100);
+  overflow: hidden;
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Header */
+.register-header {
+  background: linear-gradient(to right, var(--primary-600), var(--primary-700));
+  padding: 2rem;
+  text-align: center;
+}
+
+.header-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.header-icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--white);
+}
+
+.header-title {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  color: var(--primary-100);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Steps Indicator */
+.steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.step-circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.step-active .step-circle {
+  background-color: var(--primary-500);
+  color: var(--white);
+}
+
+.step-inactive .step-circle {
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+}
+
+.step-connector {
+  width: 2rem;
+  height: 0.125rem;
+  background-color: var(--gray-200);
+}
+
+.step-connector.active {
+  background-color: var(--primary-500);
+}
+
+/* Form Section */
+.register-form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Error Box */
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--red-50);
+  color: var(--red-600);
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.error-box svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  color: var(--gray-400);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  box-shadow: 0 0 0 2px var(--primary-500);
+  border-color: transparent;
+}
+
+/* Textarea adjustments */
+.input-wrapper textarea.input-field {
+  padding-left: 2.5rem;
+  resize: none;
+}
+
+/* Password toggle button */
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle:hover {
+  color: var(--gray-600);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-500);
+  color: var(--white);
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-600);
+}
+
+.btn-primary:disabled {
+  background-color: var(--primary-300);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-200);
+}
+
+/* Two buttons row */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.button-row > button {
+  flex: 1;
+}
+
+/* Step animations */
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Sign in link */
+.login-link {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.login-link a {
+  color: var(--primary-600);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Keyframes */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
