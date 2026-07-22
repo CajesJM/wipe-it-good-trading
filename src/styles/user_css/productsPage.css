@@ -232,6 +232,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+  align-items: stretch;
 }
 
 @media (min-width: 768px) {
@@ -257,6 +258,15 @@
 .product-item {
   animation: fadeIn 0.5s ease both;
   /* delay set via inline style */
+  display: flex;
+  min-width: 0;
+}
+
+.product-item > .product-card { width: 100%; }
+
+@media (max-width: 520px) {
+  .product-grid { grid-template-columns: 1fr; gap: .9rem; }
+  .product-image { aspect-ratio: 4 / 3; }
 }
 
 /* Empty state */

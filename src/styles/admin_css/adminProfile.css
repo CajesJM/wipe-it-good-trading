@@ -1,0 +1,24 @@
+.admin-profile { max-width: 1080px; margin: 0 auto; }
+.profile-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); gap: 1rem; }
+.profile-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 4px 16px rgba(15,23,42,.04); display: flex; flex-direction: column; gap: .9rem; }
+.profile-card-title { display: flex; align-items: flex-start; gap: .7rem; padding-bottom: .7rem; border-bottom: 1px solid #f1f5f9; }
+.profile-card-title > svg { color: #4f46e5; margin-top: .15rem; }
+.profile-card-title h2 { margin: 0; font-size: 1.05rem; color: #111827; }
+.profile-card-title p { margin: .25rem 0 0; color: #6b7280; font-size: .8rem; }
+.profile-card label { display: flex; flex-direction: column; gap: .35rem; color: #374151; font-size: .82rem; font-weight: 600; }
+.profile-card input, .profile-card textarea { width: 100%; border: 1px solid #d1d5db; border-radius: .6rem; padding: .65rem .7rem; font: inherit; font-weight: 400; color: #111827; resize: vertical; }
+.profile-card input:focus, .profile-card textarea:focus { outline: 2px solid #c7d2fe; border-color: #6366f1; }
+.profile-photo-row { display: flex; align-items: center; gap: 1rem; }
+.profile-photo { width: 4.5rem; height: 4.5rem; overflow: hidden; border-radius: 50%; display: grid; place-items: center; color: #6366f1; background: #eef2ff; }
+.profile-photo img { width: 100%; height: 100%; object-fit: cover; }
+.profile-upload { display: inline-flex !important; flex-direction: row !important; align-items: center; gap: .4rem; cursor: pointer; color: #4f46e5 !important; }
+.profile-upload input { display: none; }
+.profile-upload svg, .profile-remove svg { width: 1rem; }
+.profile-remove { display: block; margin-top: .35rem; border: 0; padding: 0; color: #dc2626; background: transparent; font-size: .75rem; cursor: pointer; }
+.profile-save { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; margin-top: auto; border: 0; border-radius: .6rem; padding: .7rem 1rem; color: #fff; background: #4f46e5; font-weight: 700; cursor: pointer; }
+.profile-save:disabled { opacity: .6; cursor: wait; }
+.profile-save svg { width: 1rem; }
+.profile-alert { margin-bottom: 1rem; border-radius: .65rem; padding: .75rem 1rem; font-size: .85rem; }
+.profile-alert.success { color: #166534; background: #dcfce7; }
+.profile-alert.error { color: #991b1b; background: #fee2e2; }
+@media (max-width: 800px) { .profile-grid { grid-template-columns: 1fr; } }

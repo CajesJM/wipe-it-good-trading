@@ -13,13 +13,13 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      const result = login(email, password);
+    try {
+      const result = await login(email, password);
       if (result.success) {
         if (result.user?.isAdmin) {
           navigate("/admin");
@@ -27,10 +27,13 @@ const LoginPage: React.FC = () => {
           navigate("/");
         }
       } else {
-        setError("Account not found. Try one of the demo accounts below.");
+        setError(result.error || "Invalid email or password");
       }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -105,32 +108,6 @@ const LoginPage: React.FC = () => {
             </p>
           </form>
 
-          {/* Demo Accounts */}
-          <div className="demo-section">
-            <p className="demo-title">Demo Accounts</p>
-            <div className="demo-buttons">
-              <button
-                onClick={() => {
-                  setEmail("maria.santos@gmail.com");
-                  setPassword("demo");
-                }}
-                className="demo-btn"
-              >
-                <span className="demo-label">Customer:</span>{" "}
-                <span className="demo-email">maria.santos@gmail.com</span>
-              </button>
-              <button
-                onClick={() => {
-                  setEmail("admin@wipeitgood.com");
-                  setPassword("demo");
-                }}
-                className="demo-btn"
-              >
-                <span className="demo-label">Admin:</span>{" "}
-                <span className="demo-email">admin@wipeitgood.com</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

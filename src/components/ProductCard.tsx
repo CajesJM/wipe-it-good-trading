@@ -15,6 +15,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   showBadge = true,
 }) => {
   const { addToCart, user } = useStore();
+  const adminViewing = user?.isAdmin === true;
+  const ratingValue = Math.min(5, Math.max(0, Number.isFinite(Number(product.rating)) ? Number(product.rating) : 0));
 
   return (
     <div className="product-card">
@@ -47,23 +49,34 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Rating */}
         <div className="product-rating">
           <div className="stars">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`star-icon ${i < Math.floor(product.rating) ? "star-filled" : "star-empty"}`}
-              />
-            ))}
+            {[...Array(5)].map((_, i) => {
+              const fillPercent = Math.min(100, Math.max(0, (ratingValue - i) * 100));
+              return (
+                <span className="star-shell" key={i}>
+                  <Star className="star-icon star-empty" fill="none" />
+                  <span className="star-fill-layer" style={{ width: `${fillPercent}%` }}>
+                    <Star className="star-icon star-filled" fill="currentColor" />
+                  </span>
+                </span>
+              );
+            })}
           </div>
-          <span className="rating-sold">({product.soldCount} sold)</span>
+          <span className="rating-sold">{ratingValue.toFixed(1)} · {product.soldCount} sold</span>
         </div>
 
         <div className="product-bottom">
           <span className="product-price">₱{product.price.toFixed(2)}</span>
           <button
-            onClick={() => addToCart(product)}
-            disabled={product.stock === 0}
+            onClick={async () => {
+              try {
+                await addToCart(product);
+              } catch (error) {
+                window.alert(error instanceof Error ? error.message : "Please sign in first.");
+              }
+            }}
+            disabled={product.stock === 0 || adminViewing}
             className="add-to-cart-btn"
-            title={!user ? "Login to add to cart" : "Add to cart"}
+            title={adminViewing ? "Admins cannot shop" : "Add to cart"}
           >
             <ShoppingCart />
           </button>

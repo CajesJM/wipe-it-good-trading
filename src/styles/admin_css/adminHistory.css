@@ -1,0 +1,14 @@
+.admin-history { max-width: 960px; margin: 0 auto; }
+.history-list { display: flex; flex-direction: column; gap: .75rem; }
+.history-item { display: flex; gap: .9rem; background: white; border: 1px solid #e5e7eb; border-radius: .85rem; padding: 1rem; box-shadow: 0 4px 16px rgba(15, 23, 42, .04); }
+.history-icon { flex: 0 0 2.4rem; height: 2.4rem; display: grid; place-items: center; border-radius: .7rem; color: #4f46e5; background: #eef2ff; }
+.history-icon svg { width: 1.2rem; }
+.history-content { flex: 1; min-width: 0; }
+.history-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.history-customer { display: inline-flex; align-items: center; gap: .25rem; margin-left: .6rem; color: #6b7280; font-size: .8rem; }
+.history-customer svg { width: .85rem; }
+.history-note { margin: .45rem 0 .25rem; color: #374151; font-size: .9rem; }
+.history-content time { color: #9ca3af; font-size: .75rem; }
+.history-empty { display: grid; place-items: center; gap: .5rem; min-height: 240px; background: white; border: 1px dashed #d1d5db; border-radius: .85rem; color: #6b7280; }
+.history-empty svg { width: 2rem; height: 2rem; }
+@media (max-width: 560px) { .history-topline { flex-direction: column; } .history-customer { display: flex; margin: .35rem 0 0; } }

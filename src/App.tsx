@@ -14,6 +14,8 @@ import AdminDashboard from './dashboard/admin/AdminDashboard';
 import AdminOrders from './dashboard/admin/AdminOrders';
 import AdminProducts from './dashboard/admin/AdminProducts';
 import AdminCustomers from './dashboard/admin/AdminCustomers';
+import AdminHistory from './dashboard/admin/AdminHistory';
+import AdminProfile from './dashboard/admin/AdminProfile';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -40,6 +42,8 @@ const AppContent: React.FC = () => {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="customers" element={<AdminCustomers />} />
+            <Route path="history" element={<AdminHistory />} />
+            <Route path="profile" element={<AdminProfile />} />
           </Route>
         </Routes>
       </div>

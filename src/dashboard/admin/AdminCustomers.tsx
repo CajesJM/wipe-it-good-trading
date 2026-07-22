@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   Eye,
@@ -12,12 +12,15 @@ import { useStore } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
 import StatusBadge from "../../components/StatusBadge";
 import type { User } from "../../utils/types";
+import AdminPagination from "./AdminPagination";
 import "@/styles/admin_css/adminCustomers.css";
 
 const AdminCustomers: React.FC = () => {
   const { users, orders } = useStore();
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
 
   const customers = users.filter((u) => !u.isAdmin);
 
@@ -30,6 +33,9 @@ const AdminCustomers: React.FC = () => {
       u.phone.includes(q)
     );
   });
+  useEffect(() => setPage(1), [search]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pagedCustomers = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const getCustomerOrders = (userId: string) =>
     orders.filter((o) => o.userId === userId);
@@ -59,7 +65,7 @@ const AdminCustomers: React.FC = () => {
 
       {/* Customers Grid */}
       <div className="customers-grid">
-        {filtered.map((customer) => {
+        {pagedCustomers.map((customer) => {
           const customerOrders = getCustomerOrders(customer.id);
           const totalSpent = getCustomerTotal(customer.id);
           return (
@@ -115,6 +121,7 @@ const AdminCustomers: React.FC = () => {
           <p className="empty-message">No customers found</p>
         </div>
       )}
+      <AdminPagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
 
       {/* Customer Detail Modal */}
       <Modal

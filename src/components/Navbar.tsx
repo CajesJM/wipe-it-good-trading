@@ -8,7 +8,7 @@ import {
   LogOut,
   Package,
   LayoutDashboard,
-  Sparkles,
+  Wrench,
 } from "lucide-react";
 import { useStore } from "../hooks/useStore";
 import "@/styles/navbar.css";
@@ -36,11 +36,17 @@ const Navbar: React.FC = () => {
           <div className="navbar-inner">
             <Link to="/admin" className="admin-logo">
               <div className="admin-logo-icon">
-                <Sparkles />
+                <Wrench />
               </div>
               <span className="admin-logo-text">WIG Admin</span>
             </Link>
             <div className="admin-links">
+              <Link to="/admin/profile" className="admin-profile-trigger" aria-label="Open admin profile">
+                <span className="admin-avatar">
+                  {user?.profileImage ? <img src={user.profileImage} alt="" /> : <User />}
+                </span>
+                <span className="admin-profile-name">{user?.fullName?.split(" ")[0]}</span>
+              </Link>
               <Link to="/" className="admin-link">
                 View Store
               </Link>
@@ -62,7 +68,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="navbar-logo">
             <div className="logo-icon">
-              <Sparkles />
+              <Wrench />
             </div>
             <div className="logo-text">
               <span className="logo-main">Wipe It Good</span>
@@ -108,9 +114,7 @@ const Navbar: React.FC = () => {
                   className="user-menu-btn"
                 >
                   <div className="avatar">
-                    <span className="avatar-text">
-                      {user.fullName.charAt(0)}
-                    </span>
+                    {user.profileImage ? <img src={user.profileImage} alt="" /> : <span className="avatar-text">{user.fullName.charAt(0)}</span>}
                   </div>
                   <span className="user-name">
                     {user.fullName.split(" ")[0]}

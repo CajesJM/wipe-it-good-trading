@@ -30,17 +30,25 @@ const CartPage: React.FC = () => {
   const total = getCartTotal();
   const shippingFee = total >= 1000 ? 0 : 100;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!user) {
       navigate("/login");
       return;
     }
-    const order = placeOrder(paymentMethod);
-    if (order) {
-      setOrderPlaced(true);
-      setTimeout(() => {
-        navigate("/orders");
-      }, 2000);
+    try {
+      const order = await placeOrder(paymentMethod);
+      if (order) {
+        if ((order as any).checkoutUrl) {
+          window.location.assign((order as any).checkoutUrl);
+          return;
+        }
+        setOrderPlaced(true);
+        setTimeout(() => {
+          navigate("/orders");
+        }, 2000);
+      }
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Unable to place this order.");
     }
   };
 
@@ -54,6 +62,19 @@ const CartPage: React.FC = () => {
             Thank you for your purchase. You will be redirected to your orders.
           </p>
           <div className="success-redirect">Redirecting...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (user?.isAdmin) {
+    return (
+      <div className="empty-cart">
+        <div className="empty-cart-content">
+          <div className="empty-cart-icon"><ShoppingBag /></div>
+          <h2 className="empty-cart-title">Admin view only</h2>
+          <p className="empty-cart-subtitle">Admin accounts manage products and orders. Customer checkout is disabled.</p>
+          <Link to="/admin" className="browse-btn">Go to Admin Dashboard</Link>
         </div>
       </div>
     );
@@ -228,6 +249,9 @@ const CartPage: React.FC = () => {
                         <span className="payment-label">GCash</span>
                       </button>
                     </div>
+                    <p className="payment-note">
+                      GCash checkout opens the secure payment provider page. Your order is confirmed only after the provider webhook verifies payment.
+                    </p>
                   </div>
 
                   <button

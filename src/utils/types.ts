@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentMethod } from './constants';
+import type { OrderStatus, PaymentMethod } from "./constants";
 
 export interface Product {
   id: string;
@@ -17,6 +17,7 @@ export interface Product {
 export interface CartItem {
   product: Product;
   quantity: number;
+  cartItemId?: string;
 }
 
 export interface User {
@@ -28,6 +29,7 @@ export interface User {
   isAdmin: boolean;
   verified: boolean;
   createdAt: string;
+  profileImage?: string;
 }
 
 export interface Order {
@@ -43,4 +45,5 @@ export interface Order {
   paymentMethod: PaymentMethod;
   createdAt: string;
   updatedAt: string;
+  statusEvents?: { status: OrderStatus; note?: string | null; createdAt: string }[];
 }

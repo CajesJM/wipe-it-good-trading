@@ -219,6 +219,15 @@
   font-weight: 700;
 }
 
+.avatar img,
+.admin-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .user-name {
   font-size: 0.875rem;
   font-weight: 500;
@@ -429,6 +438,32 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.admin-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-700);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.admin-avatar {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  color: var(--primary-700);
+  background: var(--primary-50);
+}
+
+@media (max-width: 560px) {
+  .admin-profile-name { display: none; }
 }
 
 .admin-link {

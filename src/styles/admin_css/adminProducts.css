@@ -292,8 +292,42 @@
 .product-rating svg {
   width: 0.75rem;
   height: 0.75rem;
+}
+
+.admin-rating-stars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.admin-star-shell {
+  position: relative;
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.admin-star-shell > svg,
+.admin-star-fill > svg {
+  position: absolute;
+  inset: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.admin-star-empty {
+  color: #d1d5db;
+  fill: none !important;
+}
+
+.admin-star-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+}
+
+.admin-star-filled {
   color: var(--accent-400);
-  fill: var(--accent-400);
+  fill: currentColor;
 }
 
 .product-stats {
@@ -467,4 +501,46 @@
 
 .btn-delete:hover {
   background-color: var(--red-600);
+}
+.image-upload-area {
+  margin-top: 4px;
+}
+.upload-placeholder {
+  width: 100%;
+  padding: 2rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+.upload-placeholder:hover {
+  border-color: #9ca3af;
+  background: #f3f4f6;
+}
+.image-preview {
+  position: relative;
+  display: inline-block;
+}
+.image-preview img {
+  max-height: 150px;
+  border-radius: 0.5rem;
+  object-fit: contain;
+}
+.remove-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border: none;
 }

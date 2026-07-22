@@ -17,7 +17,7 @@ import "@/styles/user_css/productDetailPage.css";
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { products, addToCart } = useStore();
+  const { products, addToCart, user } = useStore();
   const [quantity, setQuantity] = useState(1);
 
   const product = products.find((p) => p.id === id);
@@ -126,14 +126,18 @@ const ProductDetailPage: React.FC = () => {
               {/* Actions */}
               <div className="actions">
                 <button
-                  onClick={() => {
-                    addToCart(product, quantity);
-                    navigate("/cart");
+                  onClick={async () => {
+                    try {
+                      await addToCart(product, quantity);
+                      navigate("/cart");
+                    } catch (error) {
+                      window.alert(error instanceof Error ? error.message : "Please sign in first.");
+                    }
                   }}
-                  disabled={product.stock === 0}
+                  disabled={product.stock === 0 || user?.isAdmin === true}
                   className="add-to-cart-btn"
                 >
-                  <ShoppingCart /> Add to Cart
+                  <ShoppingCart /> {user?.isAdmin ? "Admin view only" : "Add to Cart"}
                 </button>
               </div>
 

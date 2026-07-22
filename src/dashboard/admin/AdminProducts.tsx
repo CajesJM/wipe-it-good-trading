@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Plus, Search, Edit, Trash2, Star } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Plus, Search, Edit, Trash2, Star, Upload } from "lucide-react";
 import { useStore } from "../../hooks/useStore";
 import { CATEGORIES } from "../../utils/constants";
 import Modal from "../../components/Modal";
 import type { Product } from "../../utils/types";
+import AdminPagination from "./AdminPagination";
 import "@/styles/admin_css/adminProducts.css";
 
 const emptyForm = {
@@ -11,11 +12,12 @@ const emptyForm = {
   price: 0,
   description: "",
   image: "",
-  category: "Surface Cleaners",
+  category: "Silent Inverter Generator",
   stock: 0,
   featured: false,
   topSelling: false,
   rating: 4.5,
+  soldCount: 0,
 };
 
 const AdminProducts: React.FC = () => {
@@ -26,50 +28,96 @@ const AdminProducts: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = products.filter((p) => {
     const matchSearch =
       !search || p.name.toLowerCase().includes(search.toLowerCase());
-    const matchCat = catFilter === "All" || p.category === catFilter;
+    const matchCat = catFilter === "All" || p.category.trim().toLowerCase() === catFilter.trim().toLowerCase();
     return matchSearch && matchCat;
   });
+  useEffect(() => setPage(1), [search, catFilter]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pagedProducts = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const openAddModal = () => {
     setEditId(null);
     setForm(emptyForm);
+    setImagePreview("");
     setShowModal(true);
   };
 
   const openEditModal = (product: Product) => {
     setEditId(product.id);
     setForm({
-      name: product.name,
-      price: product.price,
-      description: product.description,
-      image: product.image,
-      category: product.category,
-      stock: product.stock,
-      featured: product.featured,
-      topSelling: product.topSelling,
-      rating: product.rating,
+      name: product.name || "",
+      price: product.price ?? 0,
+      description: product.description || "",
+      image: product.image || "",
+      category: product.category || "Silent Inverter Generator",
+      stock: product.stock ?? 0,
+      featured: product.featured ?? false,
+      topSelling: product.topSelling ?? false,
+      rating: product.rating ?? 4.5,
+      soldCount: product.soldCount ?? 0,
     });
+    setImagePreview(product.image || "");
     setShowModal(true);
   };
 
-  const handleSave = () => {
-    if (!form.name || !form.price) return;
-    if (editId) {
-      updateProduct(editId, form);
-    } else {
-      addProduct(form);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setForm((current) => ({ ...current, image: String(reader.result ?? "") }));
+      };
+      reader.readAsDataURL(file);
     }
-    setShowModal(false);
-    setForm(emptyForm);
   };
 
-  const handleDelete = (id: string) => {
-    deleteProduct(id);
+  const handleSave = async () => {
+    if (!form.name || !form.price) {
+      alert("Please fill name and price");
+      return;
+    }
+    setLoading(true);
+    try {
+      if (editId) {
+        // Update: send updates and optional new image
+        await updateProduct(editId, form);
+      } else {
+        // Add new product
+        await addProduct({ ...form, image: form.image || "/images/equipment-hero.png" });
+      }
+      setShowModal(false);
+      setForm(emptyForm);
+      setImagePreview("");
+    } catch (err) {
+      console.error("Save failed", err);
+      alert("Failed to save product. Check console.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteProduct(id);
     setDeleteConfirm(null);
+  };
+
+  // Helper to get full image URL (for existing images)
+  const getImageUrl = (imagePath: string) => {
+    if (!imagePath) return "";
+    if (imagePath.startsWith("http")) return imagePath;
+    if (imagePath.startsWith("/") || imagePath.startsWith("data:")) return imagePath;
+    return `http://localhost:5000${imagePath}`;
   };
 
   return (
@@ -101,7 +149,8 @@ const AdminProducts: React.FC = () => {
           onChange={(e) => setCatFilter(e.target.value)}
           className="filter-select"
         >
-          {CATEGORIES.map((c) => (
+          <option value="All">All Categories</option>
+          {CATEGORIES.filter((c) => c !== "All").map((c) => (
             <option key={c} value={c}>
               {c}
             </option>
@@ -111,10 +160,10 @@ const AdminProducts: React.FC = () => {
 
       {/* Products Grid */}
       <div className="product-grid">
-        {filtered.map((product) => (
+        {pagedProducts.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-card-image">
-              <img src={product.image} alt={product.name} />
+              <img src={getImageUrl(product.image)} alt={product.name} />
               <div className="overlay">
                 <button
                   onClick={() => openEditModal(product)}
@@ -141,7 +190,21 @@ const AdminProducts: React.FC = () => {
                   ₱{product.price.toFixed(2)}
                 </span>
                 <span className="product-rating">
-                  <Star /> {product.rating}
+                  <span className="admin-rating-stars">
+                    {[...Array(5)].map((_, i) => {
+                      const ratingValue = Math.min(5, Math.max(0, Number(product.rating) || 0));
+                      const fillPercent = Math.min(100, Math.max(0, (ratingValue - i) * 100));
+                      return (
+                        <span className="admin-star-shell" key={i}>
+                          <Star className="admin-star-empty" fill="none" />
+                          <span className="admin-star-fill" style={{ width: `${fillPercent}%` }}>
+                            <Star className="admin-star-filled" fill="currentColor" />
+                          </span>
+                        </span>
+                      );
+                    })}
+                  </span>
+                  {Number(product.rating || 0).toFixed(1)}
                 </span>
               </div>
               <div className="product-stats">
@@ -158,6 +221,7 @@ const AdminProducts: React.FC = () => {
           <p className="empty-message">No products found</p>
         </div>
       )}
+      <AdminPagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
 
       {/* Add/Edit Modal */}
       <Modal
@@ -215,16 +279,45 @@ const AdminProducts: React.FC = () => {
               ))}
             </select>
           </div>
+
+          {/* Image Upload (replaces URL input) */}
           <div className="form-group">
-            <label className="form-label">Image URL</label>
-            <input
-              type="text"
-              value={form.image}
-              onChange={(e) => setForm({ ...form, image: e.target.value })}
-              className="form-input"
-              placeholder="https://example.com/image.jpg"
-            />
+            <label className="form-label">Product Image</label>
+            <div className="image-upload-area">
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              {imagePreview ? (
+                <div className="image-preview">
+                  <img src={imagePreview} alt="Preview" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImagePreview("");
+                      setForm((current) => ({ ...current, image: "" }));
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                    className="remove-image"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="upload-placeholder"
+                >
+                  <Upload /> Click to upload image
+                </button>
+              )}
+            </div>
           </div>
+
           <div className="form-group">
             <label className="form-label">Description</label>
             <textarea
@@ -249,6 +342,16 @@ const AdminProducts: React.FC = () => {
                 onChange={(e) =>
                   setForm({ ...form, rating: parseFloat(e.target.value) || 0 })
                 }
+                className="form-input"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Sold Count</label>
+              <input
+                type="number"
+                min="0"
+                value={form.soldCount}
+                onChange={(e) => setForm({ ...form, soldCount: parseInt(e.target.value) || 0 })}
                 className="form-input"
               />
             </div>
@@ -279,8 +382,16 @@ const AdminProducts: React.FC = () => {
             <button onClick={() => setShowModal(false)} className="btn-cancel">
               Cancel
             </button>
-            <button onClick={handleSave} className="btn-save">
-              {editId ? "Update Product" : "Add Product"}
+            <button
+              onClick={handleSave}
+              className="btn-save"
+              disabled={loading}
+            >
+              {loading
+                ? "Saving..."
+                : editId
+                  ? "Update Product"
+                  : "Add Product"}
             </button>
           </div>
         </div>

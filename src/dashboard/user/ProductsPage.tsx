@@ -23,7 +23,8 @@ const ProductsPage: React.FC = () => {
       );
     }
     if (category !== "All") {
-      result = result.filter((p) => p.category === category);
+      const selectedCategory = category.trim().toLowerCase();
+      result = result.filter((p) => p.category.trim().toLowerCase() === selectedCategory);
     }
     switch (sort) {
       case "price-asc":
@@ -49,7 +50,7 @@ const ProductsPage: React.FC = () => {
         <div className="products-header">
           <h1 className="products-title">Our Products</h1>
           <p className="products-subtitle">
-            Browse our complete catalog of cleaning solutions
+            Generators, equipment, hoses, and job-ready tools for every project
           </p>
         </div>
 

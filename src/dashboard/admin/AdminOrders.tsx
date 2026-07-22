@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Filter, ChevronDown, ChevronUp, Eye } from "lucide-react";
 import { useStore } from "../../hooks/useStore";
 import StatusBadge from "../../components/StatusBadge";
@@ -6,6 +6,7 @@ import Modal from "../../components/Modal";
 import { ORDER_STATUSES } from "../../utils/constants";
 import type { OrderStatus } from "../../utils/constants";
 import type { Order } from "../../utils/types";
+import AdminPagination from "./AdminPagination";
 import "@/styles/admin_css/adminOrders.css";
 
 const AdminOrders: React.FC = () => {
@@ -17,6 +18,8 @@ const AdminOrders: React.FC = () => {
   );
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const filtered = orders
     .filter((o) => {
@@ -35,6 +38,10 @@ const AdminOrders: React.FC = () => {
         mul
       );
     });
+
+  useEffect(() => setPage(1), [search, statusFilter, sortField, sortDir]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pagedOrders = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const toggleSort = (field: "createdAt" | "total") => {
     if (sortField === field) {
@@ -129,7 +136,7 @@ const AdminOrders: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((order) => (
+              {pagedOrders.map((order) => (
                 <tr key={order.id}>
                   <td className="order-id">{order.id}</td>
                   <td>
@@ -181,6 +188,7 @@ const AdminOrders: React.FC = () => {
           <div className="empty-message">No orders found</div>
         )}
       </div>
+      <AdminPagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
 
       {/* Order Detail Modal */}
       <Modal

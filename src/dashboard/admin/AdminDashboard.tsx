@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Package,
@@ -17,36 +17,60 @@ import "@/styles/admin_css/adminDashboard.css";
 const AdminDashboard: React.FC = () => {
   const { products, orders, users } = useStore();
 
-  const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+  const revenueOrders = orders.filter((order) => order.status !== "Cancelled");
+  const totalRevenue = revenueOrders.reduce((sum, o) => sum + o.total, 0);
   const pendingOrders = orders.filter((o) => o.status === "Pending").length;
   const confirmedOrders = orders.filter((o) => o.status === "Confirmed").length;
   const shippedOrders = orders.filter((o) => o.status === "Shipped").length;
   const deliveredOrders = orders.filter((o) => o.status === "Delivered").length;
   const customerCount = users.filter((u) => !u.isAdmin).length;
 
+  const AnimatedNumber = ({ value, currency = false }: { value: number; currency?: boolean }) => {
+    const [display, setDisplay] = useState(0);
+    useEffect(() => {
+      const from = display;
+      const duration = 700;
+      const started = performance.now();
+      let frame = 0;
+      const tick = (now: number) => {
+        const progress = Math.min(1, (now - started) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplay(from + (value - from) * eased);
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(frame);
+    }, [value]);
+    return <>{currency ? `₱${display.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : Math.round(display).toLocaleString("en-PH")}</>;
+  };
+
   const stats = [
     {
       icon: DollarSign,
       label: "Total Revenue",
-      value: `₱${totalRevenue.toLocaleString("en-PH", { minimumFractionDigits: 2 })}`,
+      value: totalRevenue,
+      currency: true,
       className: "revenue",
     },
     {
       icon: ShoppingCart,
       label: "Total Orders",
       value: orders.length,
+      currency: false,
       className: "orders",
     },
     {
       icon: Package,
       label: "Products",
       value: products.length,
+      currency: false,
       className: "products",
     },
     {
       icon: Users,
       label: "Customers",
       value: customerCount,
+      currency: false,
       className: "customers",
     },
   ];
@@ -108,7 +132,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               <TrendingUp className="stat-trend" />
             </div>
-            <div className="stat-value">{stat.value}</div>
+            <div className="stat-value"><AnimatedNumber value={stat.value} currency={stat.currency} /></div>
             <div className="stat-label">{stat.label}</div>
           </div>
         ))}
@@ -122,7 +146,7 @@ const AdminDashboard: React.FC = () => {
             <div key={i} className={`status-card ${stat.className}`}>
               <stat.icon className={`status-card-icon ${stat.className}`} />
               <div className={`status-card-count ${stat.className}`}>
-                {stat.count}
+                <AnimatedNumber value={stat.count} />
               </div>
               <div className="status-card-label">{stat.label}</div>
             </div>

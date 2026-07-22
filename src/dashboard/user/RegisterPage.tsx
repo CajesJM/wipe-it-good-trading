@@ -38,7 +38,7 @@ const RegisterPage: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -46,22 +46,33 @@ const RegisterPage: React.FC = () => {
       setError("Passwords do not match");
       return;
     }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      register({
+    try {
+      // Call the async register function with all required fields, including password
+      const result = await register({
         email: formData.email,
         fullName: formData.fullName,
         phone: formData.phone,
         address: formData.address,
+        password: formData.password, // ← FIX: include password
       });
-      navigate("/");
+
+      if (result.success) {
+        // Registration successful, navigate to home or admin dashboard based on role
+        navigate("/");
+      } else {
+        setError(result.error || "Registration failed. Please try again.");
+      }
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -74,7 +85,7 @@ const RegisterPage: React.FC = () => {
               <Sparkles />
             </div>
             <h1 className="header-title">Create Account</h1>
-            <p className="header-subtitle">Join Wipe It Good Trading</p>
+            <p className="header-subtitle">Create your customer account</p>
           </div>
 
           {/* Steps indicator */}
@@ -108,7 +119,7 @@ const RegisterPage: React.FC = () => {
             {step === 1 && (
               <div className="step-content">
                 <div className="input-group">
-                  <label className="input-label">Gmail Address</label>
+                  <label className="input-label">Email Address</label>
                   <div className="input-wrapper">
                     <Mail className="input-icon" />
                     <input
@@ -116,7 +127,7 @@ const RegisterPage: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="you@gmail.com"
+                      placeholder="you@example.com"
                       required
                       className="input-field"
                     />
@@ -132,7 +143,7 @@ const RegisterPage: React.FC = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="At least 6 characters"
+                      placeholder="At least 8 characters"
                       required
                       className="input-field"
                     />
@@ -226,8 +237,8 @@ const RegisterPage: React.FC = () => {
                 </div>
 
                 <div className="input-group">
-                  <label className="input-label">
-                    Complete Address / Location
+                    <label className="input-label">
+                    Legal name and delivery address
                   </label>
                   <div className="input-wrapper">
                     <MapPin className="input-icon" style={{ top: "0.75rem" }} />
@@ -256,7 +267,7 @@ const RegisterPage: React.FC = () => {
                     disabled={loading}
                     className="btn-primary"
                   >
-                    {loading ? "Creating..." : "Create Account"}
+                    {loading ? "Creating secure account..." : "Create Account"}
                   </button>
                 </div>
               </div>

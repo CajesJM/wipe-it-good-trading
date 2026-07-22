@@ -1,14 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
-  Sparkles,
-  Phone,
-  Mail,
+  Wrench,
   MapPin,
   Globe,
   MessageCircle,
+  Phone,
+  Mail,
 } from "lucide-react";
-import "@/styles/footer.css"; // <-- use alias import
+import "@/styles/footer.css";
 
 const Footer: React.FC = () => {
   return (
@@ -19,7 +18,7 @@ const Footer: React.FC = () => {
           <div className="footer-brand">
             <div className="footer-logo">
               <div className="footer-logo-icon">
-                <Sparkles />
+                <Wrench />
               </div>
               <div className="footer-logo-text">
                 <span className="footer-logo-main">Wipe It Good</span>
@@ -27,46 +26,11 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <p className="footer-description">
-              Your trusted partner for premium cleaning products. Quality
-              supplies for a spotless home and workplace.
+              Reliable generators, equipment, hoses, and tools for every job.
+              Wholesale and retail inquiries are welcome.
             </p>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="footer-section-title">Quick Links</h4>
-            <div className="footer-links">
-              <Link to="/" className="footer-link">
-                Home
-              </Link>
-              <Link to="/products" className="footer-link">
-                Products
-              </Link>
-              <Link to="/cart" className="footer-link">
-                Cart
-              </Link>
-              <Link to="/orders" className="footer-link">
-                Track Orders
-              </Link>
-            </div>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h4 className="footer-section-title">Categories</h4>
-            <div className="footer-links">
-              <Link to="/products" className="footer-link">
-                Surface Cleaners
-              </Link>
-              <Link to="/products" className="footer-link">
-                Disinfectants
-              </Link>
-              <Link to="/products" className="footer-link">
-                Kitchen Cleaners
-              </Link>
-              <Link to="/products" className="footer-link">
-                Cleaning Kits
-              </Link>
+            <div className="footer-trust-strip">
+              <span>Quality equipment</span><span>Wholesale friendly</span><span>Fast response</span>
             </div>
           </div>
 
@@ -74,24 +38,39 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="footer-section-title">Contact Us</h4>
             <div className="footer-contact">
-              <div className="contact-item">
-                <Phone className="icon" />
-                <span>+63 918 999 0000</span>
-              </div>
-              <div className="contact-item">
-                <Mail className="icon" />
-                <span>hello@wipeitgood.com</span>
-              </div>
               <div className="contact-item address">
                 <MapPin className="icon" />
-                <span>Taguig City, Metro Manila, Philippines</span>
+                <span>Quezon City, Philippines</span>
+              </div>
+              <div className="contact-item phone">
+                <Phone className="icon" />
+                <span>+63 930 590 9481</span>
               </div>
               <div className="footer-social">
-                <a href="#" className="social-icon">
+                <a
+                  href="/"
+                  aria-label="Wipe It Good Trading website"
+                  className="social-icon"
+                >
                   <Globe />
                 </a>
-                <a href="#" className="social-icon">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61586263960469"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Message Wipe It Good Trading on Facebook"
+                  className="social-icon"
+                >
                   <MessageCircle />
+                </a>
+                <a
+                  href="mailto:wipeitgoodtrading@gmail.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Send email to Wipe It Good Trading"
+                  className="social-icon"
+                >
+                  <Mail />
                 </a>
               </div>
             </div>
@@ -100,10 +79,11 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <p className="footer-bottom-text">
-            © 2025 Wipe It Good Trading. All rights reserved.
+            © {new Date().getFullYear()} Wipe It Good Trading. All rights
+            reserved.
           </p>
           <p className="footer-bottom-text">
-            Premium Cleaning Products for Every Home
+            Tools and equipment for every job
           </p>
         </div>
       </div>

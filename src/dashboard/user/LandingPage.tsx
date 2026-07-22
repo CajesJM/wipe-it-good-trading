@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  Sparkles,
+  Wrench,
   Shield,
   Truck,
   HeadphonesIcon,
@@ -28,17 +28,17 @@ const LandingPage: React.FC = () => {
           <div className="hero-grid">
             <div className="hero-left animate-fade-in">
               <div className="hero-badge">
-                <Sparkles />
-                <span>Premium Cleaning Solutions</span>
+                <Wrench />
+                <span>Tools that work as hard as you do</span>
               </div>
               <h1 className="hero-title">
-                Wipe It <span className="accent">Good</span>
+                Built for the <span className="accent">real work.</span>
                 <br />
-                <span className="light">Trading</span>
+                <span className="light">Priced for your business.</span>
               </h1>
               <p className="hero-subtitle">
-                Discover high-quality power tools, carwash equipment, and
-                generators. Wholesale & Retail — quality you can trust.
+                Shop dependable generators, power tools, carwash equipment,
+                and accessories for home, trade, and business use.
               </p>
               <div className="hero-buttons">
                 <Link to="/products" className="btn-primary">
@@ -51,7 +51,7 @@ const LandingPage: React.FC = () => {
             </div>
             <div className="hero-right animate-slide-up">
               <div className="hero-image-wrapper">
-                <img src={PRODUCT_IMAGES.hero} alt="Clean home" />
+                <img src={PRODUCT_IMAGES.hero} alt="Generator and power tools in a workshop" />
                 <div className="hero-image-overlay" />
               </div>
               <div
@@ -64,7 +64,7 @@ const LandingPage: React.FC = () => {
                   </div>
                   <div className="floating-card-text">
                     <p className="value">4.8/5</p>
-                    <p className="label">Customer Rating</p>
+                    <p className="label">Buyer rating</p>
                   </div>
                 </div>
               </div>
@@ -77,8 +77,8 @@ const LandingPage: React.FC = () => {
                     <Truck />
                   </div>
                   <div className="floating-card-text">
-                    <p className="value">10K+</p>
-                    <p className="label">Orders Delivered</p>
+                    <p className="value">COD + GCash</p>
+                    <p className="label">Flexible payment</p>
                   </div>
                 </div>
               </div>
@@ -109,7 +109,7 @@ const LandingPage: React.FC = () => {
               </div>
               <div className="trust-text">
                 <p className="title">Fast Delivery</p>
-                <p className="desc">Nationwide shipping</p>
+                <p className="desc">Delivery across the Philippines</p>
               </div>
             </div>
             <div className="trust-card">
@@ -118,7 +118,7 @@ const LandingPage: React.FC = () => {
               </div>
               <div className="trust-text">
                 <p className="title">Quality Assured</p>
-                <p className="desc">100% genuine products</p>
+                <p className="desc">Tested, dependable equipment</p>
               </div>
             </div>
             <div className="trust-card">
@@ -126,8 +126,8 @@ const LandingPage: React.FC = () => {
                 <HeadphonesIcon />
               </div>
               <div className="trust-text">
-                <p className="title">24/7 Support</p>
-                <p className="desc">Always here to help</p>
+                <p className="title">Product Guidance</p>
+                <p className="desc">Help choosing the right unit</p>
               </div>
             </div>
             <div className="trust-card">
@@ -135,8 +135,8 @@ const LandingPage: React.FC = () => {
                 <Star />
               </div>
               <div className="trust-text">
-                <p className="title">Best Prices</p>
-                <p className="desc">Competitive pricing</p>
+                <p className="title">Wholesale & Retail</p>
+                <p className="desc">Pricing for every size of job</p>
               </div>
             </div>
           </div>
@@ -180,17 +180,17 @@ const LandingPage: React.FC = () => {
             <div className="promo-content">
               <div>
                 <span className="promo-badge">Limited Offer</span>
-                <h3 className="promo-title">Get 20% Off Your First Order!</h3>
+                <h3 className="promo-title">Need help sizing a generator?</h3>
                 <p className="promo-desc">
-                  Sign up today and enjoy an exclusive discount on your first
-                  purchase. Quality cleaning starts here.
+                  Tell us what you need to power and we’ll help you choose the
+                  right capacity before you buy.
                 </p>
                 <Link to="/register" className="promo-btn">
-                  Create Account <ArrowRight />
+                  View generators <ArrowRight />
                 </Link>
               </div>
               <div className="promo-image">
-                <img src={PRODUCT_IMAGES.hero2} alt="Cleaning promotion" />
+                <img src={PRODUCT_IMAGES.hero} alt="Generator buying guide" />
               </div>
             </div>
           </div>
@@ -226,11 +226,11 @@ const LandingPage: React.FC = () => {
       {/* CTA Section */}
       <section className="cta-section">
         <div className="cta-container">
-          <Sparkles className="cta-icon" />
-          <h2 className="cta-title">Ready to Make Your Home Sparkle?</h2>
+          <Wrench className="cta-icon" />
+          <h2 className="cta-title">Ready for the next job?</h2>
           <p className="cta-desc">
-            Join thousands of satisfied customers who trust Wipe It Good Trading
-            for their cleaning needs.
+            Equip your home, workshop, or business with tools selected for
+            performance, value, and dependable after-sales support.
           </p>
           <Link to="/products" className="cta-btn">
             Start Shopping <ArrowRight />

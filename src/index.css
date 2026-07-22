@@ -8,11 +8,11 @@
   --color-primary-200: #8fd9b0;
   --color-primary-300: #5cc78b;
   --color-primary-400: #36b86f;
-  --color-primary-500: #1a9d55;
-  --color-primary-600: #148a49;
-  --color-primary-700: #0e6e3a;
-  --color-primary-800: #09532c;
-  --color-primary-900: #04371d;
+  --color-primary-500: #f59e0b;
+  --color-primary-600: #d97706;
+  --color-primary-700: #b45309;
+  --color-primary-800: #2b2925;
+  --color-primary-900: #171614;
   --color-accent-50: #fef7e6;
   --color-accent-100: #fdecc0;
   --color-accent-200: #fbd88a;
@@ -39,7 +39,7 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8faf9;
+  background-color: #f7f7f5;
 }
 
 /* Custom scrollbar */
@@ -50,11 +50,11 @@ body {
   background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a9d55;
+  background: #f59e0b;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #148a49;
+  background: #d97706;
 }
 
 /* Animations */

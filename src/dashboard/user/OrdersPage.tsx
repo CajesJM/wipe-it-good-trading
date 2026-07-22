@@ -21,12 +21,13 @@ const statusSteps: {
 }[] = [
   { key: "Pending", icon: Clock, label: "Order Placed" },
   { key: "Confirmed", icon: CheckCircle, label: "Confirmed" },
+  { key: "Packed", icon: Package, label: "Packed" },
   { key: "Shipped", icon: Truck, label: "Shipped" },
   { key: "Delivered", icon: Home, label: "Delivered" },
 ];
 
 const OrdersPage: React.FC = () => {
-  const { user, orders } = useStore();
+  const { user, orders, cancelOrder } = useStore();
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   if (!user) {
@@ -72,7 +73,7 @@ const OrdersPage: React.FC = () => {
           >
             {userOrders.map((order) => {
               const isExpanded = expandedOrder === order.id;
-              const currentStep = getStepIndex(order.status);
+              const currentStep = order.status === "Cancelled" ? -1 : getStepIndex(order.status);
               return (
                 <div key={order.id} className="order-card">
                   {/* Header */}
@@ -121,7 +122,7 @@ const OrdersPage: React.FC = () => {
                             <div
                               className="progress-fill"
                               style={{
-                                width: `${(currentStep / (statusSteps.length - 1)) * 100}%`,
+                                width: `${Math.max(0, (currentStep / (statusSteps.length - 1)) * 100)}%`,
                               }}
                             />
                           </div>
@@ -185,6 +186,18 @@ const OrdersPage: React.FC = () => {
                             ₱{order.total.toFixed(2)}
                           </span>
                         </div>
+                        {["Pending", "Confirmed", "Packed"].includes(order.status) && (
+                          <button
+                            className="empty-btn"
+                            style={{ marginTop: "1rem", background: "#fee2e2", color: "#b91c1c" }}
+                            onClick={async (event) => {
+                              event.stopPropagation();
+                              if (window.confirm("Cancel this order?")) await cancelOrder(order.id);
+                            }}
+                          >
+                            Cancel Order
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}
