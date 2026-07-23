@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Wrench,
-  MapPin,
-  Globe,
-  MessageCircle,
-  Phone,
-  Mail,
-} from "lucide-react";
+import { MapPin, Globe, MessageCircle, Phone, Mail } from "lucide-react";
 import "@/styles/footer.css";
 
 const Footer: React.FC = () => {
@@ -17,20 +10,20 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
-              <div className="footer-logo-icon">
-                <Wrench />
-              </div>
-              <div className="footer-logo-text">
-                <span className="footer-logo-main">Wipe It Good</span>
-                <span className="footer-logo-sub">Trading</span>
-              </div>
+              <img
+                className="footer-brand-logo"
+                src="/images/wipe-it-good-logo-footer.svg"
+                alt="Wipe It Good Trading"
+              />
             </div>
             <p className="footer-description">
               Reliable generators, equipment, hoses, and tools for every job.
               Wholesale and retail inquiries are welcome.
             </p>
             <div className="footer-trust-strip">
-              <span>Quality equipment</span><span>Wholesale friendly</span><span>Fast response</span>
+              <span>Quality equipment</span>
+              <span>Wholesale friendly</span>
+              <span>Fast response</span>
             </div>
           </div>
 
@@ -44,7 +37,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="contact-item phone">
                 <Phone className="icon" />
-                <span>+63 930 590 9481</span>
+                <span>+63 993 262 0881</span>
               </div>
               <div className="footer-social">
                 <a

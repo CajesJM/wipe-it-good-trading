@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 64" role="img" aria-labelledby="title desc">
+  <title id="title">Wipe It Good Trading</title>
+  <desc id="desc">A blue circular tool mark beside the Wipe It Good Trading wordmark</desc>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="32" cy="32" r="27" fill="#1768D5"/>
+    <path d="M19.5 18.8a10.2 10.2 0 0 0 11.4 13l11 11a3.6 3.6 0 0 0 5.1-5.1l-11-11a10.2 10.2 0 0 0-13-11.4l6.2 6.2-4.8 4.8-6.2-6.2c.3-.5.7-.9 1.3-1.3Z" fill="#fff"/>
+    <path d="m13.5 43.4 10.8-10.8 4.9 4.9-10.8 10.8a3.5 3.5 0 0 1-4.9-4.9Z" fill="#F39A25"/>
+    <circle cx="16.2" cy="45.7" r="1.6" fill="#1768D5"/>
+    <path d="M72 17h9.4l4.2 24.1L92.1 17h8l6.6 24.1L110.8 17h9.2l-8 32h-9.5L96.1 27 89.8 49h-9.6L72 17Z" fill="#111C3A"/>
+    <path d="M123.5 24.5h8V49h-8V24.5Zm-.4-7.5h8.8v5.5h-8.8V17Zm14.2 7.5h7.4v3.2c1.8-2.5 4.4-3.8 7.7-3.8 6.6 0 11.4 5.2 11.4 12.9 0 7.6-4.8 12.8-11.4 12.8-3 0-5.4-1-7.1-3V58h-8V24.5Zm18.4 12.3c0-3.8-2.2-6.4-5.3-6.4s-5.3 2.6-5.3 6.4c0 3.7 2.2 6.3 5.3 6.3s5.3-2.6 5.3-6.3Zm11.1 0c0-7.7 5.3-12.9 13.1-12.9 8.4 0 13.2 5.8 12.5 15h-17.8c.5 3.2 2.6 5 5.7 5 2.3 0 4.1-.9 5.1-2.6l6.3 2.8c-2.2 3.7-6.3 5.5-11.5 5.5-8.1 0-13.4-5-13.4-12.8Zm17.8-2.7c-.3-2.9-2.1-4.5-4.7-4.5-2.7 0-4.5 1.7-5.1 4.5h9.8Z" fill="#111C3A"/>
+    <path d="M198.5 17h8.5v32h-8.5V17Zm15 7.5h4V18h8v6.5h5.6v6h-5.6v9.1c0 2.2.9 3.1 3.2 3.1.7 0 1.4-.1 2.2-.3v6.2c-1.5.5-3.3.8-5.4.8-5.5 0-8-2.7-8-8.1V30.5h-4v-6Z" fill="#1768D5"/>
+    <text x="73" y="60" fill="#68728B" font-family="Arial, sans-serif" font-size="8.5" font-weight="700" letter-spacing="2.3">GOOD TRADING</text>
+    <circle cx="249" cy="30" r="4.5" fill="#F39A25"/>
+    <path d="M259 19h13v4h-13v-4Zm0 8h18v4h-18v-4Zm0 8h15v4h-15v-4Z" fill="#1768D5"/>
+  </g>
+</svg>

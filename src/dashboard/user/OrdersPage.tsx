@@ -8,6 +8,11 @@ import {
   CheckCircle,
   Truck,
   Home,
+  Banknote,
+  Smartphone,
+  ShoppingBag,
+  RotateCcw,
+  XCircle,
 } from "lucide-react";
 import { useStore } from "../../hooks/useStore";
 import StatusBadge from "../../components/StatusBadge";
@@ -29,6 +34,7 @@ const statusSteps: {
 const OrdersPage: React.FC = () => {
   const { user, orders, cancelOrder } = useStore();
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [orderFilter, setOrderFilter] = useState<"All" | "Active" | "Delivered" | "Cancelled">("All");
 
   if (!user) {
     return (
@@ -46,6 +52,15 @@ const OrdersPage: React.FC = () => {
   }
 
   const userOrders = orders.filter((o) => o.userId === user.id);
+  const activeStatuses: OrderStatus[] = ["Pending", "Confirmed", "Packed", "Shipped"];
+  const filteredOrders = userOrders.filter((order) => {
+    if (orderFilter === "Active") return activeStatuses.includes(order.status);
+    if (orderFilter === "Delivered") return order.status === "Delivered";
+    if (orderFilter === "Cancelled") return order.status === "Cancelled";
+    return true;
+  });
+  const deliveredCount = userOrders.filter((order) => order.status === "Delivered").length;
+  const activeCount = userOrders.filter((order) => activeStatuses.includes(order.status)).length;
 
   const getStepIndex = (status: OrderStatus) =>
     statusSteps.findIndex((s) => s.key === status);
@@ -53,8 +68,18 @@ const OrdersPage: React.FC = () => {
   return (
     <div className="orders-page">
       <div className="orders-container">
-        <h1 className="orders-title">My Orders</h1>
-        <p className="orders-subtitle">Track and manage your purchases</p>
+        <section className="orders-hero">
+          <div className="orders-hero-copy">
+            <span className="orders-eyebrow">Your purchase activity</span>
+            <h1 className="orders-title">My Orders</h1>
+            <p className="orders-subtitle">Track every purchase from confirmation through delivery.</p>
+          </div>
+          <div className="orders-overview">
+            <div><ShoppingBag /><span><strong>{userOrders.length}</strong>Total orders</span></div>
+            <div><RotateCcw /><span><strong>{activeCount}</strong>In progress</span></div>
+            <div><CheckCircle /><span><strong>{deliveredCount}</strong>Delivered</span></div>
+          </div>
+        </section>
 
         {userOrders.length === 0 ? (
           <div className="empty-orders">
@@ -68,20 +93,37 @@ const OrdersPage: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-          >
-            {userOrders.map((order) => {
+          <>
+            <div className="orders-filter-bar" role="tablist" aria-label="Filter orders">
+              {(["All", "Active", "Delivered", "Cancelled"] as const).map((filter) => {
+                const count = filter === "All" ? userOrders.length : filter === "Active" ? activeCount : filter === "Delivered" ? deliveredCount : userOrders.filter((order) => order.status === "Cancelled").length;
+                return (
+                  <button key={filter} type="button" role="tab" aria-selected={orderFilter === filter} onClick={() => setOrderFilter(filter)} className={orderFilter === filter ? "active" : ""}>
+                    {filter}<span>{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {filteredOrders.length === 0 ? (
+              <div className="orders-filter-empty">
+                <Package />
+                <h3>No {orderFilter.toLowerCase()} orders</h3>
+                <p>Orders matching this status will appear here.</p>
+              </div>
+            ) : (
+            <div className="orders-list" key={orderFilter}>
+            {filteredOrders.map((order, index) => {
               const isExpanded = expandedOrder === order.id;
               const currentStep = order.status === "Cancelled" ? -1 : getStepIndex(order.status);
               return (
-                <div key={order.id} className="order-card">
+                <div key={order.id} className={`order-card ${isExpanded ? "expanded" : ""}`} style={{ animationDelay: `${index * 0.05}s` }}>
                   {/* Header */}
                   <button
                     onClick={() =>
                       setExpandedOrder(isExpanded ? null : order.id)
                     }
                     className="order-header"
+                    aria-expanded={isExpanded}
                   >
                     <div className="order-id-section">
                       <div className="order-id-icon">
@@ -113,8 +155,11 @@ const OrdersPage: React.FC = () => {
                   {/* Expanded Content */}
                   {isExpanded && (
                     <div className="order-details">
+                      {order.status === "Cancelled" && (
+                        <div className="cancelled-order-note"><XCircle /><div><strong>This order was cancelled</strong><span>No further delivery updates will be recorded.</span></div></div>
+                      )}
                       {/* Progress Tracker */}
-                      <div style={{ marginBottom: "1.5rem" }}>
+                      <div className="order-tracker-section">
                         <h4 className="tracker-title">Order Status</h4>
                         <div className="progress-container">
                           {/* Progress Line */}
@@ -151,11 +196,7 @@ const OrdersPage: React.FC = () => {
                         <h4 className="items-title">Items</h4>
                         {order.items.map((item) => (
                           <div key={item.product.id} className="item-row">
-                            <img
-                              src={item.product.image}
-                              alt={item.product.name}
-                              className="item-image"
-                            />
+                            {item.product.image ? <img src={item.product.image} alt={item.product.name} className="item-image" /> : <div className="item-image item-image-placeholder" aria-label="No product image" />}
                             <div className="item-details">
                               <p className="item-name">{item.product.name}</p>
                               <p className="item-qty">
@@ -175,9 +216,7 @@ const OrdersPage: React.FC = () => {
                         <div className="summary-row">
                           <span className="label">Payment Method</span>
                           <span className="method">
-                            {order.paymentMethod === "COD"
-                              ? "💵 Cash on Delivery"
-                              : "📱 GCash"}
+                            {order.paymentMethod === "COD" ? <><Banknote /> Cash on Delivery</> : <><Smartphone /> GCash</>}
                           </span>
                         </div>
                         <div className="summary-total">
@@ -188,8 +227,7 @@ const OrdersPage: React.FC = () => {
                         </div>
                         {["Pending", "Confirmed", "Packed"].includes(order.status) && (
                           <button
-                            className="empty-btn"
-                            style={{ marginTop: "1rem", background: "#fee2e2", color: "#b91c1c" }}
+                            className="cancel-order-btn"
                             onClick={async (event) => {
                               event.stopPropagation();
                               if (window.confirm("Cancel this order?")) await cancelOrder(order.id);
@@ -204,7 +242,9 @@ const OrdersPage: React.FC = () => {
                 </div>
               );
             })}
-          </div>
+            </div>
+            )}
+          </>
         )}
       </div>
     </div>

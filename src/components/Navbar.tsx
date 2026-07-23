@@ -9,6 +9,10 @@ import {
   Package,
   LayoutDashboard,
   Wrench,
+  ShieldCheck,
+  CreditCard,
+  Headphones,
+  BadgeCheck,
 } from "lucide-react";
 import { useStore } from "../hooks/useStore";
 import "@/styles/navbar.css";
@@ -21,6 +25,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const isAdmin = location.pathname.startsWith("/admin");
+  const usesModernStoreNav = location.pathname === "/" || location.pathname === "/products" || location.pathname.startsWith("/product/") || location.pathname === "/orders" || location.pathname === "/cart" || location.pathname === "/profile";
   const cartCount = getCartCount();
 
   const handleLogout = () => {
@@ -62,18 +67,27 @@ const Navbar: React.FC = () => {
 
   // User Navbar
   return (
-    <nav className="navbar">
+    <>
+      {usesModernStoreNav && (
+        <div className="home-service-bar">
+          <div className="home-service-bar-inner">
+            <span><BadgeCheck /> Quality-checked equipment</span>
+            <span><ShieldCheck /> Secure checkout</span>
+            <span><CreditCard /> GCash & cash on delivery</span>
+            <span><Headphones /> Customer support</span>
+          </div>
+        </div>
+      )}
+      <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-inner">
           {/* Logo */}
           <Link to="/" className="navbar-logo">
-            <div className="logo-icon">
-              <Wrench />
-            </div>
-            <div className="logo-text">
-              <span className="logo-main">Wipe It Good</span>
-              <span className="logo-sub">Trading</span>
-            </div>
+            <img
+              className="brand-logo-image"
+              src="/images/wipe-it-good-logo.svg"
+              alt="Wipe It Good Trading"
+            />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -102,7 +116,7 @@ const Navbar: React.FC = () => {
 
           {/* Right Actions */}
           <div className="nav-actions">
-            <Link to="/cart" className="cart-btn">
+            <Link to="/cart" className="cart-btn" id="cart-icon-target" aria-label="Shopping cart">
               <ShoppingCart />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
@@ -114,7 +128,9 @@ const Navbar: React.FC = () => {
                   className="user-menu-btn"
                 >
                   <div className="avatar">
-                    {user.profileImage ? <img src={user.profileImage} alt="" /> : <span className="avatar-text">{user.fullName.charAt(0)}</span>}
+                    {user.profileImage
+                      ? <img src={user.profileImage} alt={`${user.fullName} profile`} />
+                      : <span className="avatar-text">{(user.fullName.trim().charAt(0) || user.email.charAt(0)).toUpperCase()}</span>}
                   </div>
                   <span className="user-name">
                     {user.fullName.split(" ")[0]}
@@ -147,6 +163,7 @@ const Navbar: React.FC = () => {
                       >
                         <Package /> My Orders
                       </Link>
+                      {!user.isAdmin && <Link to="/profile" className="dropdown-link" onClick={() => setProfileOpen(false)}><User /> My Profile</Link>}
                       <button
                         onClick={handleLogout}
                         className="dropdown-logout"
@@ -199,10 +216,12 @@ const Navbar: React.FC = () => {
                 My Orders
               </Link>
             )}
+            {user && !user.isAdmin && <Link to="/profile" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>My Profile</Link>}
           </div>
         )}
       </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

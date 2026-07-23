@@ -18,6 +18,16 @@
 .profile-save { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; margin-top: auto; border: 0; border-radius: .6rem; padding: .7rem 1rem; color: #fff; background: #4f46e5; font-weight: 700; cursor: pointer; }
 .profile-save:disabled { opacity: .6; cursor: wait; }
 .profile-save svg { width: 1rem; }
+.profile-secondary { border: 1px solid #c7d2fe; border-radius: .6rem; padding: .65rem 1rem; color: #4338ca; background: #eef2ff; font-weight: 700; cursor: pointer; }
+.customer-profile { margin: 2rem auto; padding: 0 1rem; }
+.customer-profile .profile-card label span { display: inline-flex; align-items: center; gap: .35rem; }
+.address-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: .25rem; color: #374151; font-size: .82rem; font-weight: 700; }
+.address-heading > span { display: inline-flex; align-items: center; gap: .35rem; }
+.location-btn { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid #c7d2fe; border-radius: .5rem; padding: .4rem .55rem; color: #4338ca; background: #eef2ff; font-size: .72rem; font-weight: 700; cursor: pointer; }
+.location-btn:disabled { opacity: .6; cursor: wait; }
+.profile-card select { width: 100%; border: 1px solid #d1d5db; border-radius: .6rem; padding: .65rem .7rem; font: inherit; color: #111827; background: #fff; }
+.profile-card select:disabled { color: #9ca3af; background: #f3f4f6; }
+.field-hint { margin-top: -.15rem; color: #6b7280; font-size: .72rem; font-weight: 400; }
 .profile-alert { margin-bottom: 1rem; border-radius: .65rem; padding: .75rem 1rem; font-size: .85rem; }
 .profile-alert.success { color: #166534; background: #dcfce7; }
 .profile-alert.error { color: #991b1b; background: #fee2e2; }

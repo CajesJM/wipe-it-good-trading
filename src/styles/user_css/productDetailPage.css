@@ -337,6 +337,11 @@
     box-shadow 0.2s;
 }
 
+.buy-now-detail-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: .5rem; padding: .875rem 1.5rem; border-radius: .75rem; border: 1px solid #f59e0b; color: #92400e; background: #fef3c7; font-weight: 700; cursor: pointer; }
+.buy-now-detail-btn:hover:not(:disabled) { background: #fde68a; }
+.buy-now-detail-btn:disabled { opacity: .55; cursor: not-allowed; }
+.buy-now-detail-btn svg { width: 1.25rem; height: 1.25rem; }
+
 .add-to-cart-btn:hover:not(:disabled) {
   background-color: var(--primary-600);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);

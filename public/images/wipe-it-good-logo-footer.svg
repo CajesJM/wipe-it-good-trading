@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 72" role="img" aria-labelledby="footerLogoTitle footerLogoDesc">
+  <title id="footerLogoTitle">Wipe It Good Trading</title>
+  <desc id="footerLogoDesc">Wipe It Good Trading logo for dark backgrounds</desc>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="36" cy="36" r="30" fill="#1768D5"/>
+    <path d="M22 21.4a11.4 11.4 0 0 0 12.7 14.5L47 48.2a4 4 0 1 0 5.7-5.7L40.4 30.2a11.4 11.4 0 0 0-14.5-12.7l6.9 6.9-5.3 5.3-6.9-6.9c.3-.5.8-1 1.4-1.4Z" fill="#fff"/>
+    <path d="m15.3 48.5 12-12 5.5 5.5-12 12a3.9 3.9 0 0 1-5.5-5.5Z" fill="#F39A25"/>
+    <circle cx="18.3" cy="51.1" r="1.8" fill="#1768D5"/>
+    <text x="78" y="36" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="800" letter-spacing="-.8">Wipe It Good</text>
+    <text x="79" y="55" fill="#9FC7FF" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="3">TRADING</text>
+    <circle cx="279" cy="27" r="4.5" fill="#F39A25"/>
+    <path d="M290 18h13v4h-13v-4Zm0 8h17v4h-17v-4Zm0 8h14v4h-14v-4Z" fill="#65A5FA"/>
+  </g>
+</svg>

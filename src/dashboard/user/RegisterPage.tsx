@@ -1,283 +1,129 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  Sparkles,
-  User,
-  Phone,
-  MapPin,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import { AlertCircle, ArrowRight, BadgeCheck, CheckCircle, Eye, EyeOff, Lock, Mail, PackageCheck, ShieldCheck } from "lucide-react";
 import { useStore } from "../../hooks/useStore";
-import "@/styles/user_css/registerPage.css";
+import "@/styles/user_css/authPages.css";
 
 const RegisterPage: React.FC = () => {
-  const { register } = useStore();
+  const { register, verifyAccount } = useStore();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    fullName: "",
-    phone: "",
-    address: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
+  const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
+  const [pin, setPin] = useState("");
+  const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
-
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault(); setError(""); setMessage("");
+    if (!form.email.toLowerCase().endsWith("@gmail.com")) return setError("Use a valid Gmail address.");
+    if (form.password.length < 8) return setError("Password must be at least 8 characters.");
+    if (form.password !== form.confirmPassword) return setError("Passwords do not match.");
     setLoading(true);
     try {
-      // Call the async register function with all required fields, including password
-      const result = await register({
-        email: formData.email,
-        fullName: formData.fullName,
-        phone: formData.phone,
-        address: formData.address,
-        password: formData.password, // ← FIX: include password
-      });
+      const result = await register({ email: form.email, fullName: "Customer", phone: "", address: "", password: form.password });
+      if (result.verificationRequired && result.userId) { setUserId(result.userId); setMessage("We sent a 6-digit PIN to your Gmail."); }
+      else if (result.success) navigate("/");
+      else setError(result.error ?? "Registration failed.");
+    } catch (err: any) { setError(err.response?.data?.error ?? err.message ?? "Registration failed."); }
+    finally { setLoading(false); }
+  };
 
-      if (result.success) {
-        // Registration successful, navigate to home or admin dashboard based on role
-        navigate("/");
-      } else {
-        setError(result.error || "Registration failed. Please try again.");
-      }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
+  const verify = async (event: React.FormEvent) => {
+    event.preventDefault(); setError(""); setLoading(true);
+    try { await verifyAccount(userId, "EMAIL", pin); navigate("/"); }
+    catch (err: any) { setError(err.response?.data?.error ?? "Incorrect or expired PIN."); }
+    finally { setLoading(false); }
+  };
+
+  const startGoogle = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL ?? "http://localhost:5000/api"}/auth/google/start`;
   };
 
   return (
-    <div className="register-page">
-      <div className="register-container">
-        <div className="register-card">
-          {/* Header */}
-          <div className="register-header">
-            <div className="header-icon">
-              <Sparkles />
-            </div>
-            <h1 className="header-title">Create Account</h1>
-            <p className="header-subtitle">Create your customer account</p>
-          </div>
-
-          {/* Steps indicator */}
-          <div className="steps-bar">
-            <div
-              className={`step-item ${step >= 1 ? "step-active" : "step-inactive"}`}
-            >
-              <div className="step-circle">
-                {step > 1 ? <CheckCircle className="w-3.5 h-3.5" /> : "1"}
-              </div>
-              <span>Account</span>
-            </div>
-            <div className={`step-connector ${step >= 2 ? "active" : ""}`} />
-            <div
-              className={`step-item ${step >= 2 ? "step-active" : "step-inactive"}`}
-            >
-              <div className="step-circle">2</div>
-              <span>Details</span>
+    <div className="auth-page register-page">
+      <header className="auth-topbar">
+        <Link to="/" className="auth-brand" aria-label="Wipe It Good Trading home">
+          <img src="/images/wipe-it-good-logo.svg" alt="Wipe It Good Trading" />
+        </Link>
+        <Link to="/" className="auth-back-link">Back to store <ArrowRight /></Link>
+      </header>
+      <div className="auth-shell register-container">
+        <aside className="auth-showcase">
+          <div className="auth-showcase-copy">
+            <span className="auth-eyebrow"><BadgeCheck /> Built for equipment buyers</span>
+            <h2>Your account.<br />Your orders.</h2>
+            <p>Create one secure account for faster checkout, saved delivery information, and complete order tracking.</p>
+            <div className="auth-benefits">
+              <span><ShieldCheck /> Gmail ownership verification</span>
+              <span><PackageCheck /> Delivery and purchase history</span>
             </div>
           </div>
+          <div className="auth-showcase-caption">
+            <strong>Shop with confidence</strong>
+            <span>Your phone and address are requested only when you are ready to order.</span>
+          </div>
+        </aside>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="register-form">
-            {error && (
-              <div className="error-box">
-                <AlertCircle />
-                {error}
-              </div>
-            )}
-
-            {step === 1 && (
-              <div className="step-content">
+        <section className="auth-card register-card">
+          <div className="auth-form-header register-header">
+            <span className="auth-form-kicker">{userId ? "Verify your Gmail" : "Customer registration"}</span>
+            <h1 className="header-title">{userId ? "Check your inbox" : "Create your account"}</h1>
+            <p className="header-subtitle">{userId ? `Enter the code sent to ${form.email}` : "Use a valid Gmail address to get started."}</p>
+          </div>
+          <form onSubmit={userId ? verify : submit} className="auth-form register-form">
+            {error && <div className="feedback-box error-box"><AlertCircle />{error}</div>}
+            {message && <div className="feedback-box success-box"><CheckCircle />{message}</div>}
+            {!userId ? (
+              <>
                 <div className="input-group">
-                  <label className="input-label">Email Address</label>
+                  <label className="input-label">Gmail address</label>
                   <div className="input-wrapper">
                     <Mail className="input-icon" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      required
-                      className="input-field"
-                    />
+                    <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@gmail.com" required className="input-field" autoComplete="email" />
                   </div>
                 </div>
-
                 <div className="input-group">
                   <label className="input-label">Password</label>
                   <div className="input-wrapper">
                     <Lock className="input-icon" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="At least 8 characters"
-                      required
-                      className="input-field"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="password-toggle"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
+                    <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="At least 8 characters" required minLength={8} className="input-field" autoComplete="new-password" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle" aria-label={showPassword ? "Hide passwords" : "Show passwords"}>{showPassword ? <EyeOff /> : <Eye />}</button>
                   </div>
                 </div>
-
                 <div className="input-group">
-                  <label className="input-label">Confirm Password</label>
+                  <label className="input-label">Confirm password</label>
                   <div className="input-wrapper">
                     <Lock className="input-icon" />
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      placeholder="Re-enter password"
-                      required
-                      className="input-field"
-                    />
+                    <input type={showPassword ? "text" : "password"} value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} placeholder="Re-enter password" required minLength={8} className="input-field" autoComplete="new-password" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle" aria-label={showPassword ? "Hide passwords" : "Show passwords"}>{showPassword ? <EyeOff /> : <Eye />}</button>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (
-                      !formData.email ||
-                      !formData.password ||
-                      !formData.confirmPassword
-                    ) {
-                      setError("Please fill in all fields");
-                      return;
-                    }
-                    if (formData.password !== formData.confirmPassword) {
-                      setError("Passwords do not match");
-                      return;
-                    }
-                    setError("");
-                    setStep(2);
-                  }}
-                  className="btn-primary"
-                >
-                  Continue
+                <p className="form-hint"><ShieldCheck /> Phone number and delivery address are collected securely during checkout.</p>
+                <button type="submit" disabled={loading} className="btn-primary">
+                  {loading ? <><span className="auth-spinner" /> Creating account…</> : "Create account"}
+                </button>
+                <div className="login-divider"><span>or continue with</span></div>
+                <button type="button" className="google-login-btn" onClick={startGoogle}>
+                  <span className="google-mark">G</span> Continue with Google
+                </button>
+              </>
+            ) : (
+              <div className="verification-panel">
+                <div className="verification-icon"><Mail /></div>
+                <div className="input-group">
+                  <label className="input-label">Six-digit verification PIN</label>
+                  <input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} placeholder="000000" required className="input-field pin-input" autoComplete="one-time-code" />
+                </div>
+                <button type="submit" disabled={loading || pin.length !== 6} className="btn-primary">
+                  {loading ? <><span className="auth-spinner" /> Verifying…</> : <>Verify Gmail <ArrowRight /></>}
                 </button>
               </div>
             )}
-
-            {step === 2 && (
-              <div className="step-content">
-                <div className="input-group">
-                  <label className="input-label">Full Name</label>
-                  <div className="input-wrapper">
-                    <User className="input-icon" />
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      placeholder="Juan Dela Cruz"
-                      required
-                      className="input-field"
-                    />
-                  </div>
-                </div>
-
-                <div className="input-group">
-                  <label className="input-label">Phone Number</label>
-                  <div className="input-wrapper">
-                    <Phone className="input-icon" />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+63 9XX XXX XXXX"
-                      required
-                      className="input-field"
-                    />
-                  </div>
-                </div>
-
-                <div className="input-group">
-                    <label className="input-label">
-                    Legal name and delivery address
-                  </label>
-                  <div className="input-wrapper">
-                    <MapPin className="input-icon" style={{ top: "0.75rem" }} />
-                    <textarea
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      placeholder="House/Unit No., Street, Barangay, City, Province"
-                      required
-                      rows={3}
-                      className="input-field"
-                    />
-                  </div>
-                </div>
-
-                <div className="button-row">
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="btn-secondary"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="btn-primary"
-                  >
-                    {loading ? "Creating secure account..." : "Create Account"}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <p className="login-link">
-              Already have an account? <Link to="/login">Sign In</Link>
-            </p>
+            <p className="login-link">Already have an account? <Link to="/login">Sign in</Link></p>
           </form>
-        </div>
+        </section>
       </div>
     </div>
   );

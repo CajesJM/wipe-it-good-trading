@@ -9,9 +9,14 @@ import {
   Truck,
   Shield,
   RotateCcw,
+  Zap,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
 } from "lucide-react";
 import { useStore } from "../../hooks/useStore";
 import ProductCard from "../../components/ProductCard";
+import Toast from "../../components/Toast";
 import "@/styles/user_css/productDetailPage.css";
 
 const ProductDetailPage: React.FC = () => {
@@ -19,6 +24,8 @@ const ProductDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { products, addToCart, user } = useStore();
   const [quantity, setQuantity] = useState(1);
+  const [actionBusy, setActionBusy] = useState<"buy" | "cart" | null>(null);
+  const [toast, setToast] = useState("");
 
   const product = products.find((p) => p.id === id);
   if (!product) {
@@ -40,20 +47,22 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="product-detail-page">
+      <Toast message={toast} type="error" onClose={() => setToast("")} />
       <div className="product-detail-container">
         {/* Breadcrumb */}
         <button onClick={() => navigate(-1)} className="back-btn">
           <ArrowLeft /> Back
         </button>
 
-        <div className="product-main">
+        <div className={`product-main ${product.stock === 0 ? "product-unavailable" : ""}`}>
           <div className="product-layout">
             {/* Image */}
             <div className="product-image-area">
-              <img src={product.image} alt={product.name} />
+              {product.image ? <img src={product.image} alt={product.name} /> : <div className="product-image-placeholder" aria-label="No product image" />}
               {product.featured && (
                 <span className="featured-badge">Featured</span>
               )}
+              {product.stock === 0 && <span className="detail-sold-out-overlay">Currently unavailable</span>}
             </div>
 
             {/* Details */}
@@ -94,10 +103,10 @@ const ProductDetailPage: React.FC = () => {
                   }`}
                 >
                   {product.stock > 10
-                    ? `✓ In Stock (${product.stock} available)`
+                    ? <><CheckCircle2 /> In Stock ({product.stock} available)</>
                     : product.stock > 0
-                      ? `⚠ Low Stock (${product.stock} left)`
-                      : "✗ Out of Stock"}
+                      ? <><AlertTriangle /> Low Stock ({product.stock} left)</>
+                      : <><XCircle /> Out of Stock</>}
                 </span>
               </div>
 
@@ -106,17 +115,21 @@ const ProductDetailPage: React.FC = () => {
                 <span className="quantity-label">Quantity:</span>
                 <div className="quantity-control">
                   <button
+                    type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="quantity-btn"
+                    disabled={quantity <= 1 || product.stock === 0}
                   >
                     <Minus />
                   </button>
                   <span className="quantity-value">{quantity}</span>
                   <button
+                    type="button"
                     onClick={() =>
                       setQuantity(Math.min(product.stock, quantity + 1))
                     }
                     className="quantity-btn"
+                    disabled={product.stock === 0 || quantity >= product.stock}
                   >
                     <Plus />
                   </button>
@@ -125,19 +138,43 @@ const ProductDetailPage: React.FC = () => {
 
               {/* Actions */}
               <div className="actions">
+                <button type="button" onClick={async () => {
+                  if (actionBusy) return;
+                  if (!user) {
+                    navigate("/login");
+                    return;
+                  }
+                  setActionBusy("buy");
+                  try {
+                    await addToCart(product, quantity);
+                    navigate("/cart");
+                  } catch (error) {
+                    setToast(error instanceof Error ? error.message : "Unable to buy this item.");
+                  } finally {
+                    setActionBusy(null);
+                  }
+                }} disabled={product.stock === 0 || user?.isAdmin === true || Boolean(actionBusy)} className="buy-now-detail-btn">
+                  <Zap /> {actionBusy === "buy" ? "Opening…" : "Buy Now"}
+                </button>
                 <button
+                  type="button"
                   onClick={async () => {
+                    if (actionBusy) return;
+                    if (!user) {
+                      navigate("/login");
+                      return;
+                    }
+                    setActionBusy("cart");
                     try {
                       await addToCart(product, quantity);
-                      navigate("/cart");
                     } catch (error) {
-                      window.alert(error instanceof Error ? error.message : "Please sign in first.");
-                    }
+                      setToast(error instanceof Error ? error.message : "Unable to add this item.");
+                    } finally { setActionBusy(null); }
                   }}
-                  disabled={product.stock === 0 || user?.isAdmin === true}
+                  disabled={product.stock === 0 || user?.isAdmin === true || Boolean(actionBusy)}
                   className="add-to-cart-btn"
                 >
-                  <ShoppingCart /> {user?.isAdmin ? "Admin view only" : "Add to Cart"}
+                  <ShoppingCart /> {actionBusy === "cart" ? "Adding…" : user?.isAdmin ? "Admin view only" : "Add to Cart"}
                 </button>
               </div>
 
@@ -163,6 +200,7 @@ const ProductDetailPage: React.FC = () => {
         {/* Related Products */}
         {related.length > 0 && (
           <div className="related-section">
+            <span className="related-eyebrow">More equipment to consider</span>
             <h2 className="related-title">Related Products</h2>
             <div className="related-grid">
               {related.map((p) => (

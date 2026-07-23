@@ -9,6 +9,7 @@ type Address = {
   phone: string;
   line1: string;
   barangay: string;
+  region?: string;
   city: string;
   province: string;
   postalCode: string;
@@ -145,7 +146,10 @@ export function useStore() {
       return [];
     }
     const response = await api.fetchCart();
-    state.cart = (response.data.items ?? response.data).map(toCartItem);
+    const incoming = (response.data.items ?? response.data).map(toCartItem) as CartItem[];
+    const previousOrder = new Map(state.cart.map((item, index) => [item.product.id, index]));
+    incoming.sort((a, b) => (previousOrder.get(a.product.id) ?? Number.MAX_SAFE_INTEGER) - (previousOrder.get(b.product.id) ?? Number.MAX_SAFE_INTEGER));
+    state.cart = incoming;
     notify();
     return state.cart;
   }, []);
@@ -202,9 +206,18 @@ export function useStore() {
     async (productId: string, quantity: number) => {
       const item = state.cart.find((entry) => entry.product.id === productId);
       if (!item?.cartItemId) return;
-      if (quantity <= 0) await api.removeCartItem(item.cartItemId);
-      else await api.updateCartItem(item.cartItemId, quantity);
-      await fetchCart();
+      const nextQuantity = Math.max(1, Math.min(99, quantity));
+      const previousCart = state.cart;
+      state.cart = state.cart.map((entry) => entry.product.id === productId ? { ...entry, quantity: nextQuantity } : entry);
+      notify();
+      try {
+        await api.updateCartItem(item.cartItemId, nextQuantity);
+        await fetchCart();
+      } catch (error) {
+        state.cart = previousCart;
+        notify();
+        throw error;
+      }
     },
     [fetchCart],
   );
@@ -252,6 +265,14 @@ export function useStore() {
     },
     [fetchCart, fetchOrders, fetchAddresses, fetchUsers],
   );
+  const loginWithToken = useCallback(async (token: string) => {
+    localStorage.setItem("accessToken", token);
+    const response = await api.fetchMe();
+    state.user = toUser(response.data.user ?? response.data);
+    await Promise.all([fetchCart(), fetchOrders(), fetchAddresses(), fetchUsers()]);
+    notify();
+    return state.user;
+  }, [fetchCart, fetchOrders, fetchAddresses, fetchUsers]);
   const register = useCallback(
     async (
       userData: Omit<User, "id" | "isAdmin" | "verified" | "createdAt"> & {
@@ -267,6 +288,9 @@ export function useStore() {
           phone: userData.phone,
           address: userData.address,
         });
+        if (response.data.verificationRequired) {
+          return { success: false, user: null, error: response.data.message ?? "Verify your Gmail and phone PINs before signing in.", verificationRequired: true, userId: response.data.userId };
+        }
         localStorage.setItem("accessToken", response.data.accessToken);
         state.user = toUser(response.data.user);
         state.addresses = response.data.addresses ?? [];
@@ -287,6 +311,14 @@ export function useStore() {
     },
     [],
   );
+  const verifyAccount = useCallback(async (userId: string, channel: "EMAIL" | "PHONE", code: string) => {
+    const response = await api.verifyAccount(userId, channel, code);
+    localStorage.setItem("accessToken", response.data.accessToken);
+    state.user = toUser(response.data.user);
+    state.addresses = response.data.addresses ?? [];
+    notify();
+    return state.user;
+  }, []);
   const logout = useCallback(() => {
     localStorage.removeItem("accessToken");
     state.user = null;
@@ -295,7 +327,7 @@ export function useStore() {
     state.addresses = [];
     notify();
   }, []);
-  const updateProfile = useCallback(async (data: { fullName: string; email: string; phone: string; address: string; profileImage?: string | null }) => {
+  const updateProfile = useCallback(async (data: { fullName: string; email: string; phone: string; address: string; region?: string; province?: string; city?: string; barangay?: string; postalCode?: string; profileImage?: string | null }) => {
     const response = await api.updateProfile(data);
     state.user = toUser(response.data.user ?? response.data);
     state.addresses = response.data.addresses ?? state.addresses;
@@ -305,8 +337,11 @@ export function useStore() {
   const changePassword = useCallback(async (currentPassword: string, newPassword: string) => {
     await api.changePassword(currentPassword, newPassword);
   }, []);
+  const setPassword = useCallback(async (newPassword: string) => {
+    await api.setPassword(newPassword);
+  }, []);
   const placeOrder = useCallback(
-    async (paymentMethod: PaymentMethod, addressId?: string) => {
+      async (paymentMethod: PaymentMethod, addressId?: string, itemIds?: string[]) => {
       if (!state.user) return null;
       const address = addressId
         ? state.addresses.find((entry) => entry.id === addressId)
@@ -316,6 +351,7 @@ export function useStore() {
       const response = await api.placeOrder({
         addressId: address.id,
         paymentMethod,
+        itemIds,
       });
       await fetchCart();
       await fetchOrders();
@@ -437,10 +473,13 @@ export function useStore() {
     getCartTotal,
     getCartCount,
     login,
+    loginWithToken,
     register,
+    verifyAccount,
     logout,
     updateProfile,
     changePassword,
+    setPassword,
     placeOrder,
     updateOrderStatus,
     cancelOrder,

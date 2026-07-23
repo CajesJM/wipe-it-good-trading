@@ -59,7 +59,7 @@ const AdminProducts: React.FC = () => {
       description: product.description || "",
       image: product.image || "",
       category: product.category || "Silent Inverter Generator",
-      stock: product.stock ?? 0,
+      stock: Math.max(0, product.stock ?? 0),
       featured: product.featured ?? false,
       topSelling: product.topSelling ?? false,
       rating: product.rating ?? 4.5,
@@ -89,12 +89,20 @@ const AdminProducts: React.FC = () => {
     }
     setLoading(true);
     try {
+      const normalizedForm = {
+        ...form,
+        stock: Math.max(0, Math.trunc(Number(form.stock) || 0)),
+      };
+
       if (editId) {
         // Update: send updates and optional new image
-        await updateProduct(editId, form);
+        await updateProduct(editId, normalizedForm);
       } else {
         // Add new product
-        await addProduct({ ...form, image: form.image || "/images/equipment-hero.png" });
+        await addProduct({
+          ...normalizedForm,
+          image: normalizedForm.image || "/images/equipment-hero.png",
+        });
       }
       setShowModal(false);
       setForm(emptyForm);
@@ -257,9 +265,30 @@ const AdminProducts: React.FC = () => {
               <label className="form-label">Stock</label>
               <input
                 type="number"
+                min={0}
+                step={1}
+                inputMode="numeric"
                 value={form.stock}
-                onChange={(e) =>
-                  setForm({ ...form, stock: parseInt(e.target.value) || 0 })
+                onKeyDown={(e) => {
+                  if (["-", "+", "e", "E", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                onChange={(e) => {
+                  const stock = Number.parseInt(e.target.value, 10);
+                  setForm({
+                    ...form,
+                    stock: Number.isFinite(stock) ? Math.max(0, stock) : 0,
+                  });
+                }}
+                onBlur={() =>
+                  setForm((current) => ({
+                    ...current,
+                    stock: Math.max(
+                      0,
+                      Math.trunc(Number(current.stock) || 0),
+                    ),
+                  }))
                 }
                 className="form-input"
               />

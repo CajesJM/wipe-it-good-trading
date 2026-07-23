@@ -49,6 +49,7 @@
   border: 1px solid var(--gray-100);
   overflow: hidden;
   animation: scaleIn 0.3s ease-out;
+  position: relative;
 }
 
 /* Header */
@@ -194,6 +195,24 @@
     box-shadow 0.2s;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
+.feedback-box { border: 1px solid transparent; }
+.success-box { display: flex; align-items: center; gap: .5rem; padding: .75rem; border-radius: .75rem; color: #16734b; background: #eaf9f1; border-color: #b9ebd0; font-size: .875rem; animation: fadeIn .3s ease; }
+
+.login-divider { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; color: #9ca3af; font-size: .75rem; }
+.login-divider::before, .login-divider::after { content: ""; height: 1px; flex: 1; background: #e5e7eb; }
+.google-login-btn { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 2.75rem; border: 1px solid #dfe3ea; border-radius: .7rem; background: #fff; color: #344054; font-weight: 600; cursor: pointer; }
+.google-login-btn:hover { background: #f8faff; border-color: #c6cbe0; }
+.google-mark { display: grid; place-items: center; width: 1.3rem; height: 1.3rem; border-radius: 50%; color: #4285f4; font-weight: 800; font-family: Arial, sans-serif; }
+.password-modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 1rem; background: rgba(17, 24, 39, .52); backdrop-filter: blur(5px); animation: fadeIn .2s ease; }
+.password-modal { position: relative; width: min(100%, 25rem); padding: 1.7rem; border: 1px solid #e4e7f5; border-radius: 1.1rem; background: #fff; box-shadow: 0 24px 70px rgba(17, 24, 39, .2); animation: scaleIn .25s ease; }
+.password-modal-close { position: absolute; top: .65rem; right: .75rem; width: 2rem; height: 2rem; border: 0; border-radius: .5rem; background: transparent; color: #98a2b3; font-size: 1.5rem; cursor: pointer; }
+.password-modal-close:hover { background: #f2f4f7; color: #344054; }
+.password-modal-icon { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; margin-bottom: .8rem; border-radius: .75rem; background: #eeefff; color: #5556d8; }
+.password-modal-icon svg { width: 1.25rem; }
+.password-modal h2 { color: #1d2939; font-size: 1.2rem; }
+.password-modal p { margin: .4rem 0 1rem; color: #667085; font-size: .82rem; line-height: 1.5; }
+.password-modal input { width: 100%; min-height: 2.7rem; padding: .65rem .75rem; border: 1px solid #d0d5dd; border-radius: .65rem; margin-bottom: .75rem; font: inherit; }
+.password-modal input:focus { outline: 3px solid rgba(90, 91, 229, .14); border-color: #5a5be5; }
 
 .login-submit:hover:not(:disabled) {
   background-color: var(--primary-600);

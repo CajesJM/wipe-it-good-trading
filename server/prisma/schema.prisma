@@ -46,6 +46,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum VerificationChannel {
+  EMAIL
+  PHONE
+}
+
 enum InventoryReason {
   PURCHASE
   SALE
@@ -60,17 +65,22 @@ model User {
   id           String     @id @default(uuid())
   email        String     @unique
   passwordHash String
+  authProvider String     @default("PASSWORD")
   fullName     String
   phone        String?
   profileImageData     Bytes?
   profileImageMimeType String?
   role         UserRole   @default(CUSTOMER)
   verifiedAt   DateTime?
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  twoFactorEnabled Boolean @default(false)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   addresses    Address[]
   cart         Cart?
   orders       Order[]
+  verificationChallenges VerificationChallenge[]
   auditLogs    AuditLog[] @relation("ActorAuditLogs")
 }
 
@@ -82,6 +92,7 @@ model Address {
   phone         String
   line1         String
   line2         String?
+  region        String   @default("")
   barangay      String   @default("")
   city          String   @default("")
   province      String   @default("")
@@ -93,6 +104,22 @@ model Address {
   orders        Order[]
 
   @@index([userId])
+}
+
+model VerificationChallenge {
+  id          String              @id @default(uuid())
+  userId      String
+  channel     VerificationChannel
+  destination String
+  codeHash    String
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  attempts    Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, channel, consumedAt])
+  @@index([expiresAt])
 }
 
 model Category {

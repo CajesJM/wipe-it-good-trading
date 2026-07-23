@@ -160,6 +160,10 @@
   animation: fadeIn 0.3s ease;
 }
 
+.success-box { display: flex; align-items: center; gap: .5rem; padding: .75rem; border-radius: .75rem; color: #16734b; background: #eaf9f1; border: 1px solid #b9ebd0; font-size: .875rem; }
+.success-box svg { width: 1rem; flex-shrink: 0; }
+.form-hint { color: #667085; font-size: .75rem; line-height: 1.45; margin-top: -.4rem; }
+
 .error-box svg {
   width: 1rem;
   height: 1rem;

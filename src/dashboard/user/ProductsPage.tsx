@@ -1,16 +1,18 @@
-import React, { useState, useMemo } from "react";
-import { Search, SlidersHorizontal, Grid3X3, LayoutList } from "lucide-react";
+import React, { useEffect, useState, useMemo } from "react";
+import { ChevronLeft, ChevronRight, Grid3X3, LayoutList, PackageSearch, Search, SlidersHorizontal, X } from "lucide-react";
 import { CATEGORIES } from "../../utils/constants";
 import { useStore } from "../../hooks/useStore";
 import ProductCard from "../../components/ProductCard";
 import "@/styles/user_css/productsPage.css";
 
 const ProductsPage: React.FC = () => {
+  const PAGE_SIZE = 8;
   const { products } = useStore();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("default");
   const [grid, setGrid] = useState(true);
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     let result = [...products];
@@ -42,16 +44,39 @@ const ProductsPage: React.FC = () => {
     }
     return result;
   }, [products, search, category, sort]);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const visibleProducts = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, category, sort]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const clearFilters = () => {
+    setSearch("");
+    setCategory("All");
+    setSort("default");
+  };
 
   return (
     <div className="products-page">
       <div className="products-container">
         {/* Header */}
         <div className="products-header">
-          <h1 className="products-title">Our Products</h1>
-          <p className="products-subtitle">
-            Generators, equipment, hoses, and job-ready tools for every project
-          </p>
+          <div className="products-header-copy">
+            <span className="products-eyebrow">Wipe It Good Trading catalog</span>
+            <h1 className="products-title">Find equipment built for the job</h1>
+            <p className="products-subtitle">
+              Compare generators, industrial equipment, hoses, pumps, vacuums, and job-ready tools.
+            </p>
+          </div>
+          <div className="products-header-mark" aria-hidden="true">
+            <PackageSearch />
+            <span>Reliable equipment</span>
+          </div>
         </div>
 
         {/* Filters */}
@@ -62,7 +87,7 @@ const ProductsPage: React.FC = () => {
               <Search className="search-icon" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search by product name or use..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="search-input"
@@ -101,14 +126,20 @@ const ProductsPage: React.FC = () => {
             {/* View Toggle */}
             <div className="view-toggle">
               <button
+                type="button"
                 onClick={() => setGrid(true)}
                 className={`view-btn ${grid ? "active" : ""}`}
+                aria-label="Grid view"
+                aria-pressed={grid}
               >
                 <Grid3X3 />
               </button>
               <button
+                type="button"
                 onClick={() => setGrid(false)}
                 className={`view-btn ${!grid ? "active" : ""}`}
+                aria-label="List view"
+                aria-pressed={!grid}
               >
                 <LayoutList />
               </button>
@@ -120,8 +151,10 @@ const ProductsPage: React.FC = () => {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setCategory(cat)}
                 className={`pill ${category === cat ? "pill-active" : "pill-default"}`}
+                aria-pressed={category === cat}
               >
                 {cat}
               </button>
@@ -129,15 +162,25 @@ const ProductsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Results count */}
-        <p className="results-count">
-          {filtered.length} product{filtered.length !== 1 ? "s" : ""} found
-        </p>
+        <div className="results-toolbar">
+          <p className="results-count">
+            <strong>{filtered.length}</strong> product{filtered.length !== 1 ? "s" : ""} found
+            {category !== "All" && <span> in {category}</span>}
+          </p>
+          {(search || category !== "All" || sort !== "default") && (
+            <button type="button" className="clear-filters-btn" onClick={clearFilters}>
+              <X /> Clear filters
+            </button>
+          )}
+        </div>
 
         {/* Products */}
         {filtered.length > 0 ? (
-          <div className={grid ? "product-grid" : "product-list"}>
-            {filtered.map((product, i) => (
+          <div
+            key={`${category}-${search}-${sort}-${grid}-${page}`}
+            className={`${grid ? "product-grid" : "product-list"} catalog-results-enter`}
+          >
+            {visibleProducts.map((product, i) => (
               <div
                 key={product.id}
                 className="product-item"
@@ -157,6 +200,28 @@ const ProductsPage: React.FC = () => {
               Try adjusting your search or filters
             </p>
           </div>
+        )}
+
+        {filtered.length > PAGE_SIZE && (
+          <nav className="catalog-pagination" aria-label="Product pages">
+            <button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1} aria-label="Previous page">
+              <ChevronLeft />
+            </button>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+              <button
+                type="button"
+                key={pageNumber}
+                onClick={() => setPage(pageNumber)}
+                className={page === pageNumber ? "active" : ""}
+                aria-current={page === pageNumber ? "page" : undefined}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button type="button" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages} aria-label="Next page">
+              <ChevronRight />
+            </button>
+          </nav>
         )}
       </div>
     </div>
